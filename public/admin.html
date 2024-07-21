@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration des Réservations</title>
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #000;
+            color: #c2ab70;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #000, #c2ab70);
+            background-size: 400% 400%;
+            animation: gradientAnimation 15s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(194, 171, 112, 0.3);
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #logo {
+            max-width: 150px;
+            height: auto;
+        }
+
+        h1 {
+            color: #c2ab70;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .delete-all-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 10px;
+            padding: 5px 10px;
+            background: #c2ab70;
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-all-btn:hover {
+            background: #a08b5a;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        li {
+            background: rgba(194, 171, 112, 0.1);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(194, 171, 112, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(194, 171, 112, 0.2);
+        }
+
+        .delete-btn {
+            background: #c2ab70;
+            color: #000;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #a08b5a;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #000;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #c2ab70;
+            transform: scale(0.8);
+            transition: transform 0.3s;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal button {
+            margin: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #c2ab70;
+            color: #000;
+            transition: all 0.3s ease;
+        }
+
+        .modal button:hover {
+            background: #a08b5a;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <div class="logo-container">
+            <img src="sarlextracoiffure.png" alt="Logo" id="logo">
+        </div>
+        <h1>
+            Réservations en temps réel
+            <!-- Bouton pour supprimer toutes les réservations (annulé) -->
+            <!-- <button id="deleteAllReservations" class="delete-all-btn">Supprimer toutes les réservations</button> -->
+        </h1>
+        <ul id="reservationList"></ul>
+    </div>
+
+    <!-- Modal de confirmation -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <p id="confirmationMessage">Êtes-vous sûr de vouloir supprimer cette réservation ?</p>
+            <button id="confirmAction">Confirmer</button>
+            <button id="cancelAction">Annuler</button>
+        </div>
+    </div>
+
+    <audio id="notificationSound" src="notif.wav" preload="auto"></audio>
+
+    <script src="admin.js"></script>
+</body>
+</html>

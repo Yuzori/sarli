@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Système de Réservation</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.2/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #000;
+    color: #c2ab70;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, #000, #c2ab70);
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    z-index: -1;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(194, 171, 112, 0.3);
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#logo {
+    max-width: 150px;
+    height: auto;
+}
+
+h1 {
+    color: #c2ab70;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, select, button {
+    margin: 10px 0;
+    padding: 15px;
+    border: 1px solid #c2ab70;
+    border-radius: 10px;
+    font-size: 16px;
+    background: #000;
+    color: #c2ab70;
+    transition: all 0.3s ease;
+}
+
+input::placeholder, select {
+    color: rgba(194, 171, 112, 0.7);
+}
+
+.radio-group {
+    display: flex;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+
+.animated-button {
+    background: #c2ab70;
+    color: #000;
+    cursor: pointer;
+    font-weight: 600;
+    overflow: hidden;
+    position: relative;
+}
+
+.animated-button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s;
+}
+
+.animated-button:hover::after {
+    width: 300px;
+    height: 300px;
+}
+
+#confirmation {
+    text-align: center;
+    color: #4CAF50;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.hidden {
+    display: none;
+}
+
+input.invalid, select.invalid {
+    border-color: red;
+}
+
+.message{
+    transition: 3s ease;
+}
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container">
+        <div class="logo-container">
+            <img src="/sarlextracoiffure.png" alt="Logo" id="logo">
+        </div>
+        <h1>Réservation</h1>
+        <form id="reservationForm">
+            <input type="text" id="name" placeholder="Nom" required>
+            <input type="tel" id="phone" placeholder="Numéro de téléphone" required>
+            <select id="haircut" required>
+                <option value="">Choisir une coiffure</option>
+                <option value="Taper">Taper</option>
+                <option value="Degradé">Dégradé</option>
+            </select>
+            <select id="type" required>
+                <option value="">Type de Personne</option>
+                <option value="Enfant">Enfant</option>
+                <option value="Adulte">Adulte</option>
+            </select>
+            <input type="time" id="time" required>
+            <button type="submit" class="animated-button">Réserver</button>
+        </form>
+        <div id="message" class="message"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
